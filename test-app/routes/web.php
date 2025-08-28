@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Config;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,10 +15,4 @@ use Illuminate\Support\Facades\Config;
 
 Route::get('/', function () {
     return view('welcome');
-});
-Route::get('/users', function () {
-    $users = \App\Models\User::all();
-//    $value = Config::get('database');
-    var_dump($users);exit;
-//    return view('welcome');
 });

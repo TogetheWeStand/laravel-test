@@ -1,0 +1,10 @@
+/.idea
+/test-app/vendor
+/test-app/composer.lock
+/test-app/phpunit.xml
+/test-app/.editorconfig
+/test-app/.env
+/test-app/.env.example
+/test-app/package.json
+/docker.local/data
+/docker.local/.DS_Store

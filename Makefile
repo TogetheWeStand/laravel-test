@@ -20,8 +20,10 @@ init-migrations-rbac:
 init-migrations-app:
 	docker compose --file docker.local/docker-compose.yml exec php-fpm /bin/sh -c "php yii migrate --interactive=0"
 migrate:
-	docker compose --file docker.local/docker-compose.yml exec php-fpm /bin/sh -c "php yii migrate"
+	docker compose --file docker.local/docker-compose.yml exec php-fpm /bin/sh -c "php artisan migrate"
 migrate-create:
-	docker compose --file docker.local/docker-compose.yml exec php-fpm /bin/sh -c "php yii migrate/create $(filter-out $@,$(MAKECMDGOALS))"
+	docker compose --file docker.local/docker-compose.yml exec php-fpm /bin/sh -c "php artisan make:migration $(filter-out $@,$(MAKECMDGOALS))"
 migrate-down:
-	docker compose --file docker.local/docker-compose.yml exec php-fpm /bin/sh -c "php yii migrate/down"
+	docker compose --file docker.local/docker-compose.yml exec php-fpm /bin/sh -c "php artisan migrate:rollback --step=1"
+middleware:
+	docker compose --file docker.local/docker-compose.yml exec php-fpm /bin/sh -c "php artisan make:middleware $(filter-out $@,$(MAKECMDGOALS))"
