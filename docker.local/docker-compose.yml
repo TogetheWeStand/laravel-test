@@ -1,0 +1,50 @@
+version: "3.5"
+
+services:
+  php-fpm:
+    build:
+      context: ./php-fpm
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - pgsql
+    volumes:
+      - ./php-fpm/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./php-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
+      - ${APPLICATION_DIR}:/var/www/application
+    environment:
+#      APP_KEY: ${APP_KEY}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_PORT: ${DB_PORT}
+      DB_CONNECTION: ${DB_CONNECTION}
+      PHP_XDEBUG_ENABLED: 1
+      XDEBUG_CONFIG: "remote_host=host.docker.internal"
+      YII_DEBUG: 1
+      YII_ENV: 'local'
+
+  nginx:
+    build:
+      context: ./nginx
+    depends_on:
+      - php-fpm
+    ports:
+      - ${NGINX_PORT}:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ${APPLICATION_DIR}:/var/www/application
+
+  pgsql:
+    image: postgres:latest
+    volumes:
+      - ./data/pgsql:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
