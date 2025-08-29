@@ -7,7 +7,7 @@ up:
 down:
 	docker compose --file docker.local/docker-compose.yml --env-file docker.local/.env down
 
-init: init-env up init-composer init-migrations-rbac init-migrations-app
+init: init-env up init-composer migrate
 init-env:
 	if [ ! -f docker.local/.env ] ; then \
 		cat docker.local/.env.example > docker.local/.env; \
@@ -15,10 +15,6 @@ init-env:
 	fi
 init-composer:
 	docker compose --file docker.local/docker-compose.yml exec php-fpm /bin/sh -c "composer install"
-init-migrations-rbac:
-	docker compose --file docker.local/docker-compose.yml exec php-fpm /bin/sh -c "php yii migrate --migrationPath=@yii/rbac/migrations --interactive=0"
-init-migrations-app:
-	docker compose --file docker.local/docker-compose.yml exec php-fpm /bin/sh -c "php yii migrate --interactive=0"
 migrate:
 	docker compose --file docker.local/docker-compose.yml exec php-fpm /bin/sh -c "php artisan migrate"
 migrate-create:
@@ -27,3 +23,7 @@ migrate-down:
 	docker compose --file docker.local/docker-compose.yml exec php-fpm /bin/sh -c "php artisan migrate:rollback --step=1"
 middleware:
 	docker compose --file docker.local/docker-compose.yml exec php-fpm /bin/sh -c "php artisan make:middleware $(filter-out $@,$(MAKECMDGOALS))"
+controller:
+	docker compose --file docker.local/docker-compose.yml exec php-fpm /bin/sh -c "php artisan make:controller $(filter-out $@,$(MAKECMDGOALS))"
+resource-controller:
+	docker compose --file docker.local/docker-compose.yml exec php-fpm /bin/sh -c "php artisan make:controller $(filter-out $@,$(MAKECMDGOALS)) --resource"

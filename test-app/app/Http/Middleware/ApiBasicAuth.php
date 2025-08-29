@@ -33,9 +33,6 @@ class ApiBasicAuth
             return response('Unauthorized', 401, ['WWW-Authenticate' => 'Basic']);
         }
 
-        // авторизованный пользователь будет доступен через $request->user()
-        $request->setUserResolver(fn() => $user);
-
         return $next($request);
     }
 }
