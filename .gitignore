@@ -7,3 +7,4 @@
 /docker.local/data
 /docker.local/.DS_Store
 /docker.local/.env
+/docker.local/php-fpm/.DS_Store

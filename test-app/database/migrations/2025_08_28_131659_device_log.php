@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('deviceId');
             $table->timestamp('logDate');
 
+            $table->index('deviceId');
             $table->foreign('deviceId')
                 ->references('id')
                 ->on((new Device())->getTable())
